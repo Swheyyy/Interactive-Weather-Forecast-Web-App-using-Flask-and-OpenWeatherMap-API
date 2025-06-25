@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dreamy Weather ✨</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sacramento&family=Nunito:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(-45deg, #74ebd5, #ACB6E5, #f5f7fa, #d299c2);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      overflow-x: hidden;
+      min-height: 100vh;
+      color: white;
+      padding: 20px;
+      transition: background 1s ease;
+    }
+
+    @keyframes gradientBG {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
+    .container {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    h1 {
+      font-family: 'Nunito', sans-serif;
+      font-size: 60px;
+      font-weight: bold;
+      margin-bottom: 30px;
+      color: #fffae1;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      width: 250px;
+      border: none;
+      border-radius: 25px;
+      outline: none;
+      font-size: 16px;
+      margin-right: 10px;
+      background: rgba(255, 255, 255, 0.7);
+      color: #333;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 25px;
+      background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(255, 144, 104, 0.6);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 30px rgba(255, 144, 104, 0.8);
+    }
+
+    .weather-info {
+      margin-top: 30px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .info-block {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .info-block:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 40px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    .info-block img {
+      width: 70px;
+      height: 70px;
+      margin-bottom: 10px;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle 2s infinite alternate;
+    }
+
+    @keyframes twinkle {
+      from {opacity: 0.3;}
+      to {opacity: 1;}
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Today's Weather 🌍</h1>
+  <input type="text" id="cityInput" placeholder="Enter your city...">
+  <button onclick="getWeather()">Get Forecast ✨</button>
+
+  <div class="weather-info" id="weatherInfo"></div>
+</div>
+
+<script>
+  for (let i = 0; i < 80; i++) {
+    let star = document.createElement('div');
+    star.className = 'star';
+    star.style.top = Math.random() * 100 + 'vh';
+    star.style.left = Math.random() * 100 + 'vw';
+    star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+    document.body.appendChild(star);
+  }
+
+  const icons = {
+    "Clouds": "☁️",
+    "Clear": "☀️",
+    "Rain": "🌧️",
+    "Drizzle": "🌦️",
+    "Thunderstorm": "⛈️",
+    "Snow": "❄️",
+    "Mist": "🌫️",
+    "Haze": "🌫️",
+    "Humidity": "💧",
+    "Wind": "🌬️",
+    "Pressure": "🧭",
+    "Sunrise": "🌅",
+    "Sunset": "🌇",
+    "Temperature": "🌡️",
+    "Feels Like": "🤗"
+  };
+
+  const dreamyBackgrounds = {
+    "Clouds": "linear-gradient(-45deg, #a18cd1, #fbc2eb, #fbc2eb, #fad0c4)",
+    "Clear": "linear-gradient(-45deg, #ffecd2, #fcb69f)",
+    "Rain": "linear-gradient(-45deg, #84fab0, #8fd3f4)",
+    "Thunderstorm": "linear-gradient(-45deg, #c2e9fb, #a1c4fd)",
+    "Snow": "linear-gradient(-45deg, #ff9a9e, #fecfef)",
+    "Mist": "linear-gradient(-45deg, #f6d365, #fda085)",
+    "Haze": "linear-gradient(-45deg, #ff9a9e, #fad0c4)"
+  };
+
+  async function getWeather() {
+    const city = document.getElementById('cityInput').value;
+    const apiKey = 'b7fc655555c074d8502af6c601e4a839';
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+
+      console.log(data);
+
+      const weatherType = data.weather[0].main;
+      const temp = data.main.temp;
+      const feelsLike = data.main.feels_like;
+      const humidity = data.main.humidity;
+      const wind = data.wind.speed;
+      const pressure = data.main.pressure;
+      const sunrise = new Date(data.sys.sunrise * 1000).toLocaleTimeString();
+      const sunset = new Date(data.sys.sunset * 1000).toLocaleTimeString();
+
+      const randomBG = dreamyBackgrounds[weatherType] || "linear-gradient(-45deg, #74ebd5, #ACB6E5, #f5f7fa, #d299c2)";
+      document.body.style.background = randomBG;
+
+      const weatherDiv = document.getElementById('weatherInfo');
+      weatherDiv.innerHTML = '';
+
+      const weatherDetails = [
+        { label: weatherType, value: '', emoji: icons[weatherType] || "🌈" },
+        { label: "Temperature", value: `${temp} °C`, emoji: icons["Temperature"] },
+        { label: "Feels Like", value: `${feelsLike} °C`, emoji: icons["Feels Like"] },
+        { label: "Humidity", value: `${humidity}%`, emoji: icons["Humidity"] },
+        { label: "Wind", value: `${wind} m/s`, emoji: icons["Wind"] },
+        { label: "Pressure", value: `${pressure} hPa`, emoji: icons["Pressure"] },
+        { label: "Sunrise", value: sunrise, emoji: icons["Sunrise"] },
+        { label: "Sunset", value: sunset, emoji: icons["Sunset"] }
+      ];
+
+      weatherDetails.forEach(detail => {
+        const block = document.createElement('div');
+        block.className = 'info-block';
+        block.innerHTML = `
+          <div style="font-size:40px;">${detail.emoji}</div>
+          <h3>${detail.label}</h3>
+          <p>${detail.value}</p>
+        `;
+        weatherDiv.appendChild(block);
+      });
+
+    } catch (error) {
+      alert('City not found or API Error ❌');
+      console.error(error);
+    }
+  }
+</script>
+
+</body>
+</html>
