@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Weather Forecast Website
 
 A simple weather forecast website that displays current weather conditions for any city using the OpenWeatherMap API.
@@ -19,3 +20,7 @@ A simple weather forecast website that displays current weather conditions for a
    - Mac/Linux: `source venv/bin/activate`
 4. Install dependencies: `pip install -r requirements.txt`
 5. Create a `.env` file in the root directory and add your OpenWeatherMap API key:
+=======
+# Interactive-Weather-Forecast-Web-App-using-Flask-and-OpenWeatherMap-API
+A visually engaging Flask web app that shows real-time weather data using the OpenWeatherMap API. It displays temperature, humidity, wind, pressure, sunrise/sunset, and more. Features include a responsive tile layout, emoji icons, and a background that changes with weather conditions.
+>>>>>>> fe3f95d5a2e2ba3c4be4a90792640d5aa0229d82
